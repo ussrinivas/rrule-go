@@ -555,8 +555,8 @@ func (iterator *rIterator) generate() {
 				date := iterator.ii.firstyday.AddDate(0, 0, *i)
 				for _, timeTemp := range iterator.timeset {
 					res := time.Date(date.Year(), date.Month(), date.Day(),
-						timeTemp.Hour(), timeTemp.Minute(), timeTemp.Second(),
-						timeTemp.Nanosecond(), timeTemp.Location())
+						date.Hour(), date.Minute(), date.Second(),
+						timeTemp.Nanosecond(), date.Location())
 					if !r.until.IsZero() && res.After(r.until) {
 						r.len = iterator.total
 						iterator.finished = true
@@ -758,6 +758,7 @@ func (r *RRule) All() []time.Time {
 // The inc keyword defines what happens if after and/or before are themselves occurrences.
 // With inc == True, they will be included in the list, if they are found in the recurrence set.
 func (r *RRule) Between(after, before time.Time, inc bool) []time.Time {
+	r.dtstart = after.In(after.Location())
 	return between(r.Iterator(), after, before, inc)
 }
 
