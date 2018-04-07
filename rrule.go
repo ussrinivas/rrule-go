@@ -238,7 +238,7 @@ func (info *iterInfo) rebuild(year int, month time.Month) {
 		info.yearlen = 365 + isLeap(year)
 		info.nextyearlen = 365 + isLeap(year+1)
 		info.firstyday = time.Date(
-			year, time.January, 1, 0, 0, 0, 0,
+			year, time.January, 1, info.rrule.dtstart.Hour(), info.rrule.dtstart.Minute(), info.rrule.dtstart.Second(), info.rrule.dtstart.Nanosecond(),
 			info.rrule.dtstart.Location())
 		info.yearweekday = toPyWeekday(info.firstyday.Weekday())
 		info.wdaymask = WDAYMASK[info.yearweekday:]
@@ -522,8 +522,8 @@ func (iterator *rIterator) generate() {
 				timeTemp := iterator.timeset[timepos]
 				date := iterator.ii.firstyday.AddDate(0, 0, i)
 				res := time.Date(date.Year(), date.Month(), date.Day(),
-					timeTemp.Hour(), timeTemp.Minute(), timeTemp.Second(),
-					timeTemp.Nanosecond(), timeTemp.Location())
+					date.Hour(), date.Minute(), date.Second(),
+					date.Nanosecond(), timeTemp.Location())
 				if !timeContains(poslist, res) {
 					poslist = append(poslist, res)
 				}

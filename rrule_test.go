@@ -3,9 +3,11 @@ package rrule
 import (
 	"testing"
 	"time"
+
+	rrule "github.com/ussrinivas/rrule-go"
 )
 
-func timesEqual(value, want []time.Time) bool {
+/*func timesEqual(value, want []time.Time) bool {
 	if len(value) != len(want) {
 		return false
 	}
@@ -15,9 +17,22 @@ func timesEqual(value, want []time.Time) bool {
 		}
 	}
 	return true
+}*/
+
+func TestUTCWithTime(t *testing.T) {
+	rule, _ := rrule.StrToRRule("FREQ=DAILY")
+	loc, _ := time.LoadLocation("Asia/Kolkata")
+	fromDate := time.Unix(0, 1522953000000*int64(time.Millisecond)).In(loc)
+	toDate := time.Unix(0, 1523989800000*int64(time.Millisecond)).In(loc)
+	allOccurrences := rule.Between(fromDate, toDate, true)
+	t.Log(allOccurrences)
+	t.Log("Received count: ", len(allOccurrences))
+	if len(allOccurrences) != 13 {
+		t.Errorf("Expected 13 but generated %d", len(allOccurrences))
+	}
 }
 
-func TestNoDtstart(t *testing.T) {
+/*func TestNoDtstart(t *testing.T) {
 	r, _ := NewRRule(ROption{Freq: MONTHLY})
 	if seconds := time.Now().Sub(r.dtstart).Seconds(); seconds > 10 {
 		t.Errorf(`time.Now().Sub(r.dtstrt).Seconds() = %f, want <= 10`, seconds)
@@ -3678,4 +3693,4 @@ func TestBetweenInc(t *testing.T) {
 	if !timesEqual(value, want) {
 		t.Errorf("get %v, want %v", value, want)
 	}
-}
+}*/
